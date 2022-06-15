@@ -17,25 +17,25 @@ TypeScript 提供最新的和不断发展的 JavaScript 特性，包括那些来
 
 ## TypeScript 基础类型
 
-**1. Boolean 类型**
+### 1. Boolean 类型  
 ```typescript
 let isDone: boolean = false;
 // ES5：var isDone = false;
 ```
 
-**2. Number 类型**
+### 2. Number 类型  
 ```typescript
 let count: number = 10;
 // ES5：var count = 10;
 ```
 
-**3. String 类型**
+### 3. String 类型  
 ```typescript
 let name: string = "semliker";
 // ES5：var name = 'semlinker';
 ```
 
-**4. Symbol 类型**
+### 4. Symbol 类型  
 ```typescript
 const sym = Symbol();
 let obj = {
@@ -44,7 +44,7 @@ let obj = {
 console.log(obj[sym]); // semlinker
 ```
 
-**5. Array 类型**
+### 5. Array 类型  
 ```typescript
 let list: number[] = [1, 2, 3];
 // ES5：var list = [1,2,3];
@@ -53,7 +53,7 @@ let list: Array<number= [1, 2, 3]; // Array<number+泛型语法
 // ES5：var list = [1,2,3];
 ```
 
-**6. Enum 类型**  
+### 6. Enum 类型**  
 使用枚举我们可以定义一些带名字的常量。 使用枚举可以清晰地表达意图或创建一组有区别的用例。 TypeScript 支持数字的和基于字符串的枚举。
 
 + **6.1 数字枚举**  
@@ -173,7 +173,7 @@ let list: Array<number= [1, 2, 3]; // Array<number+泛型语法
   console.log(Enum.A) //输出：0
   console.log(Enum[0]) // 输出：A
   ```
-**7. Any 类型**  
+### 7. Any 类型  
 在 TypeScript 中，任何类型都可以被归为 any 类型。这让 any 类型成为了类型系统的顶级类型（也被称作全局超级类型）。
 ```typescript
 let notSure: any = 666;
@@ -192,7 +192,7 @@ value[0][1]; // OK
 ```
 在许多场景下，这太宽松了。使用`any`类型，可以很容易地编写类型正确但在运行时有问题的代码。如果我们使用`any`类型，就无法使用TypeScript提供的大量的保护机制。为了解决`any`带来的问题，TypeScript 3.0引入了`unknown`类型。
 
-**8. Unknown 类型**  
+### 8. Unknown 类型  
 就像所有类型都可以赋值给`any`，所有类型也都可以赋值给`unknown`。这使得`unknown`成为TypeScript类型系统的另一种顶级类型（另一种是`any`）。
 ```typescript
 let value: unknown;
@@ -235,7 +235,7 @@ value[0][1]; // Error
 ```
 将`value`变量类型设置为`unknown`后，这些操作都不再被认为是类型正确的。通过将`any`类型改变为`unknown`类型，我们已将允许所有更改的默认设置，更改为禁止任何更改。
 
-**9. Tuple 类型**  
+### 9. Tuple 类型  
 众所周知，数组一般由同种类型的值组成，但有时我们需要在单个变量中存储不同类型的值，这时候我们就可以使用元组。在JavaScript中是没有元组的，元组是TypeScript中特有的类型，其工作方式类似于数组。
 
 元组可用于定义具有有限数量的未命名属性的类型。每个属性都有一个关联的类型。使用元组时，必须提供每个属性的值。
@@ -262,7 +262,7 @@ tupleType = ["semliker"];
 Property '1' is missing in type '[string]' but required in type '[string, boolean]'.
 ```
 
-**10. Void 类型**  
+### 10. Void 类型  
 某种程度上来说，`void`类型像是`any`类型相反，它表示没有任何类型。当一个函数没有返回值时，通常会见到其返回值类型是`void`：
 ```typescript
 //  声明返回函数值为void
@@ -282,13 +282,13 @@ function warnUser() {
 let unusable: void = undefined;
 ```
 
-**11. Null 和 Undefined 类型** 
+### 11. Null 和 Undefined 类型  
 ```typescript
 let u: undefined = undefined;
 let n: null = null;
 ```
 
-**12. object, Object 和 {} 类型**  
+### 12. object, Object 和 {} 类型  
 + **12.1 object 类型**  
   `object`类型是：TypeScript 2.2引入的新类型，它用于表示非原始类型。
   ```typescript
@@ -358,7 +358,7 @@ let n: null = null;
   obj.toString();
   ```
 
-**13. Never 类型**  
+### 13. Never 类型  
 `never` 类型表示的是那些永不存在的值的类型。 例如，`never` 类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型。
 ```typescript
 // 返回never的函数必须存在无法达到的终点
