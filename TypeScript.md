@@ -49,7 +49,7 @@ console.log(obj[sym]); // semlinker
 let list: number[] = [1, 2, 3];
 // ES5：var list = [1,2,3];
 
-let list: Array<number= [1, 2, 3]; // Array<number+泛型语法
+let list: Array<number> = [1, 2, 3]; // Array<number+泛型语法
 // ES5：var list = [1,2,3];
 ```
 
@@ -174,13 +174,13 @@ let list: Array<number= [1, 2, 3]; // Array<number+泛型语法
   console.log(Enum[0]) // 输出：A
   ```
 ### 7. Any 类型  
-在 TypeScript 中，任何类型都可以被归为 any 类型。这让 any 类型成为了类型系统的顶级类型（也被称作全局超级类型）。
+在 TypeScript 中，任何类型都可以被归为 `any` 类型。这让 `any` 类型成为了类型系统的顶级类型（也被称作全局超级类型）。
 ```typescript
 let notSure: any = 666;
 notSure = "semlinker";
 notSure = false;
 ```
-`any`类型本质上是类型系统的一个逃逸舱。TypeScript允许我们对`any`类型的值执行任何操作，而无需事先执行任何形式的检查。比如：
+`any` 类型本质上是类型系统的一个逃逸舱。TypeScript允许我们对 `any` 类型的值执行任何操作，而无需事先执行任何形式的检查。比如：
 ```typescript
 let value: any;
 
@@ -190,10 +190,10 @@ value(); // OK
 new value(); // OK
 value[0][1]; // OK
 ```
-在许多场景下，这太宽松了。使用`any`类型，可以很容易地编写类型正确但在运行时有问题的代码。如果我们使用`any`类型，就无法使用TypeScript提供的大量的保护机制。为了解决`any`带来的问题，TypeScript 3.0引入了`unknown`类型。
+在许多场景下，这太宽松了。使用 `any` 类型，可以很容易地编写类型正确但在运行时有问题的代码。如果我们使用 `any` 类型，就无法使用TypeScript提供的大量的保护机制。为了解决 `any` 带来的问题，TypeScript 3.0引入了 `unknown` 类型。
 
 ### 8. Unknown 类型  
-就像所有类型都可以赋值给`any`，所有类型也都可以赋值给`unknown`。这使得`unknown`成为TypeScript类型系统的另一种顶级类型（另一种是`any`）。
+就像所有类型都可以赋值给 `any` ，所有类型也都可以赋值给 `unknown` 。这使得 `unknown` 成为TypeScript类型系统的另一种顶级类型（另一种是 `any` ）。
 ```typescript
 let value: unknown;
 
@@ -208,7 +208,7 @@ value = undefined; // OK
 value = new TypeError(); // OK
 value = Symbol("type"); //  OK
 ```
-对`value`变量的所有赋值都被认为是类型正确的。但是，当我们尝试将类型为`unknown`的值赋值给其他类型的变量时会发生什么？
+对 value 变量的所有赋值都被认为是类型正确的。但是，当我们尝试将类型为 `unknown` 的值赋值给其他类型的变量时会发生什么？
 ```typescript
 let value: unknown;
 
@@ -221,9 +221,9 @@ let value6: object = value; // Error
 let value7: any[] = value; // Error
 let value8: Function = value; // Error
 ```
-`unknown`类型只能被赋值给`any`类型和`unknown`类型本身。直观地说，这是有道理的：只有能够保证任意类型值的容器才能保存`unknown`类型的值。毕竟我们不知道变量`value`中存储了什么类型的值。
+`unknown` 类型只能被赋值给 `any` 类型和 `unknown` 类型本身。直观地说，这是有道理的：只有能够保证任意类型值的容器才能保存 `unknown` 类型的值。毕竟我们不知道变量 value 中存储了什么类型的值。
 
-对类型为`unknown`的值执行操作时：
+对类型为 `unknown` 的值执行操作时：
 ```typescript
 let value: unknown;
 
@@ -233,10 +233,10 @@ value(); // Error
 new value(); // Error
 value[0][1]; // Error
 ```
-将`value`变量类型设置为`unknown`后，这些操作都不再被认为是类型正确的。通过将`any`类型改变为`unknown`类型，我们已将允许所有更改的默认设置，更改为禁止任何更改。
+将 value 变量类型设置为 `unknown` 后，这些操作都不再被认为是类型正确的。通过将 `any` 类型改变为 `unknown` 类型，我们已将允许所有更改的默认设置，更改为禁止任何更改。
 
 ### 9. Tuple 类型  
-众所周知，数组一般由同种类型的值组成，但有时我们需要在单个变量中存储不同类型的值，这时候我们就可以使用元组。在JavaScript中是没有元组的，元组是TypeScript中特有的类型，其工作方式类似于数组。
+众所周知，数组一般由同种类型的值组成，但有时我们需要在单个变量中存储不同类型的值，这时候我们就可以使用元组。在 JavaScript 中是没有元组的，元组是 TypeScript 中特有的类型，其工作方式类似于数组。
 
 元组可用于定义具有有限数量的未命名属性的类型。每个属性都有一个关联的类型。使用元组时，必须提供每个属性的值。
 ```typescript
@@ -263,7 +263,7 @@ Property '1' is missing in type '[string]' but required in type '[string, boolea
 ```
 
 ### 10. Void 类型  
-某种程度上来说，`void`类型像是`any`类型相反，它表示没有任何类型。当一个函数没有返回值时，通常会见到其返回值类型是`void`：
+某种程度上来说，`void` 类型像是 `any` 类型相反，它表示没有任何类型。当一个函数没有返回值时，通常会见到其返回值类型是 `void` ：
 ```typescript
 //  声明返回函数值为void
 function warnUser(): void {
@@ -277,7 +277,7 @@ function warnUser() {
   console.log("This is my warning message");
 }
 ```
-需要注意的是，声明一个`void`类型的变量没有什么作用，因为在严格模式下，它的值只能为`undefined`：
+需要注意的是，声明一个 `void` 类型的变量没有什么作用，因为在严格模式下，它的值只能为 `undefined` ：
 ```typescript
 let unusable: void = undefined;
 ```
@@ -290,7 +290,7 @@ let n: null = null;
 
 ### 12. object, Object 和 {} 类型  
 + **12.1 object 类型**  
-  `object`类型是：TypeScript 2.2引入的新类型，它用于表示非原始类型。
+  `object` 类型是：TypeScript 2.2 引入的新类型，它用于表示非原始类型。  
   ```typescript
   // node_modules/typescript/lib/lib.es5.d.ts
   interface ObjectConstructor {
