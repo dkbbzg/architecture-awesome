@@ -1,6 +1,6 @@
 # TypeScript
 
-## TypeScript 是什么
+## 一、TypeScript 是什么
 TypeScript 是一种由微软开发的自由和开源的编程语言。它是 JavaScript 的一个超集，而且本质上向这个语言添加了可选的静态类型和基于类的面向对象编程。
 
 TypeScript 提供最新的和不断发展的 JavaScript 特性，包括那些来自 2015 年的 ECMAScript 和未来的提案中的特性，比如异步功能和 Decorators，以帮助建立健壮的组件。
@@ -15,7 +15,7 @@ TypeScript 提供最新的和不断发展的 JavaScript 特性，包括那些来
 | 支持模块、泛型和接口 | 不支持模块，泛型或接口 |
 | 社区的支持仍在增长，而且还不是很大 | 大量的社区支持以及大量文档和解决问题的支持|
 
-## TypeScript 基础类型
+## 二、TypeScript 基础类型
 
 ### 1. Boolean 类型  
 ```typescript
@@ -173,6 +173,7 @@ let list: Array<number> = [1, 2, 3]; // Array<number+泛型语法
   console.log(Enum.A) //输出：0
   console.log(Enum[0]) // 输出：A
   ```
+
 ### 7. Any 类型  
 在 TypeScript 中，任何类型都可以被归为 `any` 类型。这让 `any` 类型成为了类型系统的顶级类型（也被称作全局超级类型）。
 ```typescript
@@ -391,7 +392,7 @@ type Foo = string | number | boolean;
 ```
 然而他忘记同时修改 `controlFlowAnalysisWithNever` 方法中的控制流程，这时候 `else` 分支的 `foo` 类型会被收窄为 `boolean` 类型，导致无法赋值给 `never` 类型，这时就会产生一个编译错误。通过这个方式，我们可以确保 `controlFlowAnalysisWithNever` 方法总是穷尽了 `Foo` 的所有可能类型。 通过这个示例，我们可以得出一个结论：使用 `never` 避免出现新增了联合类型没有对应的实现，目的就是写出类型绝对安全的代码。
 
-## TypeScript 断言
+## 三、TypeScript 断言
 
 ### 类型断言  
 有时候你会遇到这样的情况，你会比 TypeScript 更了解某个值的详细信息。通常这会发生在你清楚地知道一个实体具有比它现有类型更确切的类型。
@@ -484,7 +485,7 @@ function initialize() {
 
 通过 `let x!: number;` 确定赋值断言，TypeScript 编译器就会知道该属性会被明确地赋值。
 
-## 类型守卫
+## 四、类型守卫
 
 类型保护是可执行运行时检查的一种表达式，用于确保该类型在一定的范围内。 
 
@@ -569,7 +570,7 @@ function isString(x: any): x is string {
 }
 ```
 
-## 联合类型和类型别名  
+## 五、联合类型和类型别名  
 
 ### 联合类型  
 联合类型通常与 null 或 undefined 一起使用：  
@@ -670,7 +671,7 @@ let greet = (message: Message) => {
 };
 ```
 
-## 交叉类型  
+## 六、交叉类型  
 在 TypeScript 中交叉类型是将多个类型合并为一个类型。通过 & 运算符可以将现有的多种类型叠加到一起成为一种类型，它包含了所需的所有类型的特性。  
 
 ```typescript
@@ -763,7 +764,7 @@ abc: {
 
 可知，在混入多个类型时，若存在相同的成员，且成员类型为非基本数据类型，那么是可以成功合并。  
 
-## TypeScript 函数  
+## 七、TypeScript 函数  
 
 ### TypeScript 函数与 JavaScript 函数的区别  
 | TypeScript | JavaScript |
@@ -810,12 +811,14 @@ abc: {
     }, 1000);
   }
   ```  
+
 ### 参数类型和返回类型  
 ```typescript
 function createUserId(name: string, id: number): string {
   return name + id;
 }
 ```  
+
 ### 函数类型  
 ```typescript
 let IdGenerator: (chars: string, nums: number) => string;
@@ -826,6 +829,7 @@ function createUserId(name: string, id: number): string {
 
 IdGenerator = createUserId;
 ```  
+
 ### 可选参数及默认参数  
 ```typescript
 // 可选参数
@@ -843,6 +847,7 @@ function createUserId(
 }
 ```  
 在声明函数时，可以通过 `?` 来定义可选参数，比如 `age?: number` 这种形式。在实际使用时，需要注意的是可选参数要放在普通参数的后面，不然会导致编译错误。  
+
 ### 剩余参数  
 ```typescript
 function push(array, ...items) {
@@ -854,6 +859,7 @@ function push(array, ...items) {
 let a = [];
 push(a, 1, 2, 3);
 ```  
+
 ### 函数重载  
 函数重载或方法重载是使用相同名称和不同参数数量或类型创建多个方法的一种能力。  
 ```typescript
@@ -889,3 +895,148 @@ const calculator = new Calculator();
 const result = calculator.add('Semlinker', ' Kakuqo');
 ```  
 这里需要注意的是，当 TypeScript 编译器处理函数重载时，它会查找重载列表，尝试使用第一个重载定义。 如果匹配的话就使用这个。 因此，在定义重载的时候，一定要把最精确的定义放在最前面。另外在 Calculator 类中，add(a: Combinable, b: Combinable){ } 并不是重载列表的一部分，因此对于 add 成员方法来说，我们只定义了四个重载方法。  
+
+## 八、TypeScript 数组  
+
+### 数组解构  
+```TypeScript
+let x: number; let y: number; let z: number;
+let five_array = [0,1,2,3,4];
+[x,y,z] = five_array;
+```  
+
+### 数组展开运算符  
+```TypeScript
+let two_array = [0, 1];
+let five_array = [...two_array, 2, 3, 4];
+```  
+
+### 数组遍历  
+```TypeScript
+let colors: string[] = ["red", "green", "blue"];
+for (let i of colors) {
+  console.log(i);
+}
+```  
+
+## 九、TypeScript 对象  
+
+### 对象解构  
+```TypeScript
+let person = {
+  name: "Semlinker",
+  gender: "Male",
+};
+
+let { name, gender } = person;
+```  
+
+### 对象展开运算符  
+```TypeScript
+let person = {
+  name: "Semlinker",
+  gender: "Male",
+  address: "Xiamen",
+};
+
+// 组装对象
+let personWithAge = { ...person, age: 33 };
+
+// 获取除了某些项外的其它项
+let { name, ...rest } = person;
+
+console.log(rest);
+
+// {
+//   "gender": "Male",
+//   "address": "Xiamen"
+// } 
+```  
+
+## 十、TypeScript 接口  
+接口是对行为的抽象，具体如何行动需要由类去实现。  
+TypeScript 中的接口除了可用于对类的一部分行为进行抽象以外，也常用于对「对象的形状（Shape）」进行描述。
+
+### 对象的形状  
+```TypeScript
+interface Person {
+  name: string;
+  age: number;
+}
+
+let semlinker: Person = {
+  name: "semlinker",
+  age: 33,
+};
+```  
+
+### 可选 | 只读属性
+```TypeScript
+interface Person {
+  readonly name: string;
+  age?: number;
+}
+```  
+只读属性用于限制只能在对象刚刚创建的时候修改其值。此外 TypeScript 还提供了 `ReadonlyArray<T>` 类型，它与 `Array<T>` 相似，只是把所有可变方法去掉了，因此可以确保数组创建后再也不能被修改。  
+```TypeScript
+let a: number[] = [1, 2, 3, 4];
+let ro: ReadonlyArray<number> = a;
+ro[0] = 12; // error!
+ro.push(5); // error!
+ro.length = 100; // error!
+a = ro; // error!
+```  
+
+### 任意属性  
+一个接口中除了包含必选和可选属性之外，还允许有其他的任意属性，可以使用索引签名来实现。
+```TypeScript
+interface Person {
+  name: string;
+  age?: number;
+  [propName: string]: any;
+}
+
+const p1 = { name: "semlinker" };
+const p2 = { name: "lolo", age: 5 };
+const p3 = { name: "kakuqo", sex: 1 }
+```  
+
+### 接口与类型别名的区别
++ **1. Objects / Functions**  
+  接口和类型别名都可以用来描述对象的形状或函数签名：  
+  ```TypeScript
+  // 接口
+  interface Point {
+    x: number;
+    y: number;
+  }
+
+  interface SetPoint {
+    (x: number, y: number): void;
+  }
+
+  // 类型别名
+  type Point = {
+    x: number;
+    y: number;
+  };
+
+  type SetPoint = (x: number, y: number) => void;
+  ```  
+
++ **2. Other Types**  
+  与接口类型不一样，类型别名可以用于一些其他类型，比如原始类型、联合类型和元组：
+  ```TypeScript
+  // primitive
+  type Name = string;
+
+  // object
+  type PartialPointX = { x: number; };
+  type PartialPointY = { y: number; };
+
+  // union
+  type PartialPoint = PartialPointX | PartialPointY;
+
+  // tuple
+  type Data = [number, string];
+  ```  
