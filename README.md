@@ -49,6 +49,6 @@
     * [对象展开运算符](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#对象展开运算符)  
   * [十、TypeScript 接口 ](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#十-TypeScript-接口 )  
     * [对象的形状](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#对象的形状)  
-    * [可选 | 只读属性](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#可选-|-只读属性)  
+    * [可选 | 只读属性](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#可选--只读属性)  
     * [任意属性](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#任意属性)  
     * [接口与类型别名的区别](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#接口与类型别名的区别)  
