@@ -1040,3 +1040,190 @@ const p3 = { name: "kakuqo", sex: 1 }
   // tuple
   type Data = [number, string];
   ```  
+
++ **3. Extend**  
+  接口和类型别名都能够被扩展，但语法有所不同。此外，接口和类型别名不是互斥的。接口可以扩展类型别名，而反过来是不行的。  
+  **Interface extends interface**  
+  ```TypeScript
+  interface PartialPointX { x: number; }
+  interface Point extends PartialPointX { 
+    y: number; 
+  }
+  ```  
+  **Type alias extends type alias**  
+  ```TypeScript
+  type PartialPointX = { x: number; };
+  type Point = PartialPointX & { y: number; };
+  ```  
+  **Interface extends type alias**  
+  ```TypeScript
+  type PartialPointX = { x: number; };
+  interface Point extends PartialPointX {
+    y: number;
+  }
+  ```  
+  **Type alias extends interface**  
+  ```TypeScript
+  interface PartialPointX { x: number; }
+  type Point = PartialPointX & { y: number; };
+  ```  
+
++ **4. Implements**  
+  类可以以相同的方式实现接口或类型别名，但类不能实现使用类型别名定义的联合类型：  
+  ```TypeScript
+  interface Point {
+    x: number;
+    y: number;
+  }
+
+  class SomePoint implements Point {
+    x = 1;
+    y = 2;
+  }
+
+  type Point2 = {
+    x: number;
+    y: number;
+  };
+
+  class SomePoint2 implements Point2 {
+    x = 1;
+    y = 2;
+  }
+
+  type PartialPoint = { x: number; } | { y: number; };
+
+  // A class can only implement an object type or 
+  // intersection of object types with statically known members.
+  class SomePartialPoint implements PartialPoint { // Error
+    x = 1;
+    y = 2;
+  }
+  ```  
+
++ **5. Declaration merging**  
+  与类型别名不同，接口可以定义多次，会被自动合并为单个接口。  
+  ```TypeScript
+  interface Point { x: number; }
+  interface Point { y: number; }
+
+  const point: Point = { x: 1, y: 2 };
+  ```  
+
+## 十一、TypeScript 类  
+
+### 类的属性与方法  
+通过 Class 关键字来定义一个类：
+```TypeScript
+class Greeter {
+  // 静态属性
+  static cname: string = "Greeter";
+  // 成员属性
+  greeting: string;
+
+  // 构造函数 - 执行初始化操作
+  constructor(message: string) {
+    this.greeting = message;
+  }
+
+  // 静态方法
+  static getClassName() {
+    return "Class name is Greeter";
+  }
+
+  // 成员方法
+  greet() {
+    return "Hello, " + this.greeting;
+  }
+}
+
+let greeter = new Greeter("world");
+```  
+
+### ECMAScript 私有字段  
+```TypeScript
+class Person {
+  #name: string;
+
+  constructor(name: string) {
+    this.#name = name;
+  }
+
+  greet() {
+    console.log(`Hello, my name is ${this.#name}!`);
+  }
+}
+
+let semlinker = new Person("Semlinker");
+
+semlinker.#name;
+// Property '#name' is not accessible outside class 'Person'
+// because it has a private identifier.
+```  
+与常规属性（甚至使用 private 修饰符声明的属性）不同，私有字段要牢记以下规则：  
++ 私有字段以 `#` 字符开头，有时我们称之为私有名称
++ 每个私有字段名称都唯一地限定于其包含的类
++ 不能在私有字段上使用 TypeScript 可访问性修饰符（如 public 或 private）
++ 私有字段不能在包含的类之外访问，甚至不能被检测到
+
+### 访问器  
+通过 getter 和 setter 方法来实现数据的封装和有效性校验，防止出现异常数据。  
+```TypeScript
+let passcode = "Hello TypeScript";
+
+class Employee {
+  private _fullName: string;
+
+  get fullName(): string {
+    return this._fullName;
+  }
+
+  set fullName(newName: string) {
+    if (passcode && passcode == "Hello TypeScript") {
+      this._fullName = newName;
+    } else {
+      console.log("Error: Unauthorized update of employee!");
+    }
+  }
+}
+
+let employee = new Employee();
+employee.fullName = "Semlinker";
+if (employee.fullName) {
+  console.log(employee.fullName);
+}
+```  
+
+### 类的继承  
+通过 extends 关键字来实现继承。  
+```TypeScript
+class Animal {
+  name: string;
+  
+  constructor(theName: string) {
+    this.name = theName;
+  }
+  
+  move(distanceInMeters: number = 0) {
+    console.log(`${this.name} moved ${distanceInMeters}m.`);
+  }
+}
+
+class Snake extends Animal {
+  constructor(name: string) {
+    super(name); // 调用父类的构造函数
+  }
+  
+  move(distanceInMeters = 5) {
+    console.log("Slithering...");
+    super.move(distanceInMeters);
+  }
+}
+
+let sam = new Snake("Sammy the Python");
+sam.move();
+``` 
+
+### 抽象类  
+
+### 类方法重载  
