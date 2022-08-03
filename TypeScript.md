@@ -1222,8 +1222,61 @@ class Snake extends Animal {
 
 let sam = new Snake("Sammy the Python");
 sam.move();
-``` 
+```  
 
 ### 抽象类  
+使用 `abstract` 关键字声明抽象类。抽象类不能被实例化，因为它里面包含一个或多个抽象方法。所谓的抽象方法，是指不包含具体实现的方法：  
+```TypeScript
+abstract class Person {
+  constructor(public name: string){}
+
+  abstract say(words: string) :void;
+}
+
+// Cannot create an instance of an abstract class.(2511)
+const lolo = new Person(); // Error
+```  
+抽象类不能被直接实例化，我们只能实例化实现了所有抽象方法的子类：  
+```TypeScript
+abstract class Person {
+  constructor(public name: string){}
+
+  // 抽象方法
+  abstract say(words: string) :void;
+}
+
+class Developer extends Person {
+  constructor(name: string) {
+    super(name);
+  }
+  
+  say(words: string): void {
+    console.log(`${this.name} says ${words}`);
+  }
+}
+
+const lolo = new Developer("lolo");
+lolo.say("I love ts!"); // lolo says I love ts!
+```  
 
 ### 类方法重载  
+```TypeScript
+class ProductService {
+    getProducts(): void;
+    getProducts(id: number): void;
+    getProducts(id?: number) {
+      if(typeof id === 'number') {
+          console.log(`获取id为 ${id} 的产品信息`);
+      } else {
+          console.log(`获取所有的产品信息`);
+      }  
+    }
+}
+
+const productService = new ProductService();
+productService.getProducts(666); // 获取id为 666 的产品信息
+productService.getProducts(); // 获取所有的产品信息 
+```  
+
+## 十二、TypeScript 泛型  
+
