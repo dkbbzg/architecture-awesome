@@ -1282,3 +1282,63 @@ productService.getProducts(); // 获取所有的产品信息
 
 设计泛型的关键目的是在成员之间提供有意义的约束，这些成员可以是：类的实例成员、类的方法、函数参数和函数返回值。  
 泛型（Generics）是允许同一个函数接受不同类型参数的一种模板。相比于使用 any 类型，使用泛型来创建可复用的组件要更好，因为泛型会保留参数类型。
+
+### 泛型语法  
+```TypeScript
+function identity <T>(value: T) : T {
+  return value;
+}
+
+console.log(identity<Number>(1));   // 1
+```  
+参考上面的代码，当我们调用 `identity<Number>(1)` ， `Number` 类型就像参数 `1` 一样，它将在出现 `T` 的任何位置填充该类型。  
+代码中 `<T>` 内部的 `T` 被称为类型变量，它是我们希望传递给identity函数的类型占位符，同时它被分配给 `value`  参数用来代替它的类型：此时 `T` 充当的是类型，而不是特定的 Number 类型。  
+其中 `T` 代表 **Type**，在定义泛型时通常用作第一个类型变量名称。但实际上 `T` 可以用任何有效名称代替。除了 `T` 之外，以下是常见泛型变量代表的意思：  
++ K（Key）：表示对象中的键类型;  
++ V（Value）：表示对象中的值类型;  
++ E（Element）：表示元素类型;  
+其实并不是只能定义一个类型变量，我们可以引入希望定义的任何数量的类型变量。比如我们引入一个新的类型变量 `U` ，用于扩展我们定义的 `identity` 函数：  
+```TypeScript
+function identity <T, U>(value: T, message: U) : T {
+  console.log(message);
+  return value;
+}
+
+console.log(identity<Number, string>(68, "Semlinker"));
+// Semlinker
+// 68
+```  
+除了为类型变量显式设定值之外，一种更常见的做法是使编译器自动选择这些类型，从而使代码更简洁。我们可以完全省略尖括号，比如：  
+```TypeScript
+function identity <T, U>(value: T, message: U) : T {
+  console.log(message);
+  return value;
+}
+
+console.log(identity(68, "Semlinker"));
+// Semlinker
+// 68
+```  
+
+### 泛型接口  
+```TypeScript
+interface GenericIdentityFn<T> {
+  (arg: T): T;
+}
+```  
+
+### 泛型类  
+```TypeScript
+class GenericNumber<T> {
+  zeroValue: T;
+  add: (x: T, y: T) => T;
+}
+
+let myGenericNumber = new GenericNumber<number>();
+myGenericNumber.zeroValue = 0;
+myGenericNumber.add = function (x, y) {
+  return x + y;
+};
+```  
+
+### 泛型工具类型  
