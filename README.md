@@ -59,3 +59,8 @@
     * [类的继承](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#类的继承)  
     * [抽象类](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#抽象类)  
     * [类方法重载](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#类方法重载)  
+* [数据结构](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#数据结构)  
+	* [一、逻辑结构](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#一逻辑结构)  
+	* [二、存储结构](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#二存储结构)  
+	* [三、树和二叉树](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#三树和二叉树)  
+      * [树](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#1-树)  
