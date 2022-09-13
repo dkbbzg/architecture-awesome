@@ -1342,3 +1342,67 @@ myGenericNumber.add = function (x, y) {
 ```  
 
 ### 泛型工具类型  
+为了方便开发者，TypeScript内置了一些常用的工具类型。
+
++ **1. typeof**  
+  在 TypeScript 中， `typeof` 操作符可以用来获取一个变量声明或对象的类型。  
+  ```TypeScript
+  interface Person {
+    name: string;
+    age: number;
+  }
+
+  const sem: Person = { name: 'semlinker', age: 33 };
+  type Sem= typeof sem; // -> Person
+
+  function toArray(x: number): Array<number> {
+    return [x];
+  }
+
+  type Func = typeof toArray; // -> (x: number) => number[]
+  ```  
+
++ **2. keyof**  
+  `keyof` 操作符是在 TypeScript 2.1 版本引入的，该操作符可以用于获取某种类型的所有键，其返回类型是联合类型。  
+  ```TypeScript
+  interface Person {
+    name: string;
+    age: number;
+  }
+
+  type K1 = keyof Person; // "name" | "age"
+  type K2 = keyof Person[]; // "length" | "toString" | "pop" | "push" | "concat" | "join" 
+  type K3 = keyof { [x: string]: Person };  // string | number
+  ```  
+  在 TypeScript 中支持两种索引签名，数字索引和字符串索引：  
+  ```TypeScript
+  interface StringArray {
+    // 字符串索引 -> keyof StringArray => string | number
+    [index: string]: string; 
+  }
+
+  interface StringArray1 {
+    // 数字索引 -> keyof StringArray1 => number
+    [index: number]: string;
+  }
+  ```  
+  为了同时支持两种索引类型，就得要求数字索引的返回值必须是字符串索引返回值的子类。**其中的原因就是当使用数值索引时，JavaScript 在执行索引操作时，会先把数值索引先转换为字符串索引。**所以 `keyof { [x: string]: Person }` 的结果会返回 `string | number`。  
+
++ **3. in**  
+  `in` 用来遍历枚举类型：  
+  ```TypeScript
+  type Keys = "a" | "b" | "c"
+
+  type Obj =  {
+    [p in Keys]: any
+  } // -> { a: any, b: any, c: any }
+  ```  
+
++ **4. infer**  
+  在条件类型语句中，可以用 `infer` 声明一个类型变量并且对它进行使用。  
+  ```TypeScript
+  type ReturnType<T> = T extends (
+    ...args: any[]
+  ) => infer R ? R : any;
+  ```  
+  以上代码中 `infer R` 就是声明一个变量来承载传入函数签名的返回值类型，简单说就是用它取到函数返回值的类型方便之后使用。  
