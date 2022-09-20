@@ -460,9 +460,9 @@ function BinaryParentTree(data, parent, leftChild, rightChild) {
         let current = root;
         while (current || stack.length > 0) {
             while (current) {
-            result.push(current.val);
-            stack.push(current);
-            current = current.left;
+                result.push(current.val);
+                stack.push(current);
+                current = current.left;
             }
             current = stack.pop();
             current = current.right;
