@@ -450,7 +450,7 @@ function BinaryParentTree(data, parent, leftChild, rightChild) {
 2. 非递归：  
     取根节点为目标节点，开始遍历   
     + 1. 访问目标节点   
-    + 2. 左孩子入栈 -> 直至左孩子为空的节点  
+    + 2. 左孩子入栈 $\rightarrow$ 直至左孩子为空的节点  
     + 3. 节点出栈，以右孩子为目标节点，再依次执行1、2、3  
 
     ```javascript
@@ -470,6 +470,176 @@ function BinaryParentTree(data, parent, leftChild, rightChild) {
         return result;
     };
     ```  
+
+#### 5.2 中序遍历  
+
+从二叉树的根结点出发，当第二次到达结点时就输出结点数据，按照先向左再向右的方向访问。  
+
+![Alt](images/DataStructure/二叉树的前序遍历.png)  
+
+中序遍历的结果: HDIBJEAFCG  
+
+1. 递归：  
+    若二叉树为空，则遍历结束；
+    否则：  
+    + 1. 中序遍历左子树(递归调用本算法)  
+    + 2. 访问根结点  
+    + 3. 中序遍历右子树(递归调用本算法)  
+
+    ```javascript
+    const inorderTraversal = function (root, array = []) {
+        if (root) {
+            inorderTraversal(root.left, array);
+            array.push(root.val);
+            inorderTraversal(root.right, array);
+        }
+        return array;
+    };
+    ```  
+
+2. 非递归：  
+    取根节点为目标节点，开始遍历  
+    + 1. 左孩子入栈 $\rightarrow$ 直至左孩子为空的节点  
+    + 2. 节点出栈 $\rightarrow$ 访问该节点  
+    + 3. 以右孩子为目标节点，再依次执行1、2、3  
+
+    ```javascript
+    const inorderTraversal = function (root) {
+        const result = [];
+        const stack = [];
+        let current = root;
+        while (current || stack.length > 0) {
+            while (current) {
+                stack.push(current);
+                current = current.left;
+            }
+            current = stack.pop();
+            result.push(current.val);
+            current = current.right;
+        }
+        return result;
+    };
+    ```  
+
+#### 5.3 后序遍历  
+
+从二叉树的根结点出发，当第三次到达结点时就输出结点数据，按照先向左再向右的方向访问。  
+
+![Alt](images/DataStructure/二叉树的前序遍历.png)  
+
+后序遍历的结果: HIDJEBFGCA  
+
+1. 递归：  
+    若二叉树为空，则遍历结束；  
+    否则：  
+    + 1. 后序遍历左子树(递归调用本算法)  
+    + 2. 后序遍历右子树(递归调用本算法)  
+    + 访问根结点  
+
+    ```javascript
+    const postorderTraversal = function (root, array = []) {
+        if (root) {
+            postorderTraversal(root.left, array);
+            postorderTraversal(root.right, array);
+            array.push(root.val);
+        }
+        return array;
+    };
+    ```  
+
+2. 非递归：  
+    取根节点为目标节点，开始遍历  
+    + 1. 左孩子入栈 $\rightarrow$ 直至左孩子为空的节点  
+    + 2. 栈顶节点的右节点为空或右节点被访问过 $\rightarrow$ 节点出栈并访问他，将节点标记为已访问  
+    + 3. 栈顶节点的右节点不为空且未被访问，以右孩子为目标节点，再依次执行1、2、3  
+
+    ```javascript
+    const postorderTraversal = function (root) {
+        const result = [];
+        const stack = [];
+        let last = null; // 标记上一个访问的节点
+        let current = root;
+        while (current || stack.length > 0) {
+            while (current) {
+                stack.push(current);
+                current = current.left;
+            }
+            current = stack[stack.length - 1];
+            if (!current.right || current.right == last) {
+                current = stack.pop();
+                result.push(current.val);
+                last = current;
+                current = null; // 继续弹栈
+            } else {
+                current = current.right;
+            }
+        }
+        return result;
+    }
+
+    ```  
+
+#### 5.4 层次遍历  
+
+按照树的层次自上而下的遍历二叉树。
+
+![Alt](images/DataStructure/二叉树的前序遍历.png)  
+
+层次遍历的结果: ABCDEFGHIJ  
+
+实现层序遍历会用到队列的实现，这里就不用写出来了。  
+
+层序遍历可以用来判断二叉树是否是完全二叉树，通过一层一层的走，遇到空之后，后续层序不能有非空，如果有非空就不是完全二叉树。  
+
+比如:  
+` ['A', 'B', 'C', null, null, 'D', null] ` 不是完全二叉树  
+` ['A', 'B', 'C', 'D', null, null, null] ` 是完全二叉树
+
+### 6. 二叉树的练习
+
+#### 6.1 二叉树重建  
+
+输入某二叉树的前序遍历和中序遍历的结果，重建出该二叉树。  
+假设输入的前序遍历和中序遍历的结果中都不含重复的数字。  
+
+例如输入前序遍历序列 `{1,2,4,7,3,5,6,8}` 和中序遍历序列 `{4,7,2,1,5,3,8,6}`，则重建二叉树并返回。  
+
+**思路：**  
+
++ 前序遍历：根节点 + 左子树前序遍历 + 右子树前序遍历  
++ 中序遍历：左子树中序遍历 + 根节点 + 右字数中序遍历  
++ 后序遍历：左子树后序遍历 + 右子树后序遍历 + 根节点  
+
+根据上面的规律：  
+
++ 前序遍历找到根结点 `root`
++ 找到 `root` 在中序遍历的位置 $\rightarrow$ 左子树的长度和右子树的长度  
++ 截取左子树的中序遍历、右子树的中序遍历  
++ 截取左子树的前序遍历、右子树的前序遍历  
++ 递归重建二叉树  
+
+![Alt](images/DataStructure/重建二叉树的前中序遍历.png)  
+
+```javascript
+function reConstructBinaryTree(pre, vin) {
+    if(pre.length === 0){
+        return null;
+    }
+    if(pre.length === 1){
+        return new TreeNode(pre[0]);
+    }
+    const value = pre[0];
+    const index = vin.indexOf(value);
+    const vinLeft = vin.slice(0,index);
+    const vinRight = vin.slice(index+1);
+    const preLeft = pre.slice(1,index+1);
+    const preRight = pre.slice(index+1);
+    const node = new TreeNode(value);
+    node.left = reConstructBinaryTree(preLeft, vinLeft);
+    node.right = reConstructBinaryTree(preRight, vinRight);
+    return node;
+}
+```  
 
 ```javascript
 

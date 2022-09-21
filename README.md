@@ -91,3 +91,8 @@
       * [4.1 链式存储](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#41-链式存储)  
     * [5. 二叉树的遍历](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#5-二叉树的遍历)  
       * [5.1 前序遍历](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#51-前序遍历)  
+      * [5.2 中序遍历](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#52-中序遍历)  
+      * [5.3 后序遍历](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#53-后序遍历)  
+      * [5.4 层次遍历](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#54-层次遍历)  
+    * [6. 二叉树的练习](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#6-二叉树的练习)  
+      * [6.1 二叉树重建](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#61-二叉树重建)  
