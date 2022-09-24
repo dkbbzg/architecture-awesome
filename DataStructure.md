@@ -534,7 +534,7 @@ function BinaryParentTree(data, parent, leftChild, rightChild) {
     否则：  
     + 1. 后序遍历左子树(递归调用本算法)  
     + 2. 后序遍历右子树(递归调用本算法)  
-    + 访问根结点  
+    + 3. 访问根结点  
 
     ```javascript
     const postorderTraversal = function (root, array = []) {
@@ -641,6 +641,233 @@ function reConstructBinaryTree(pre, vin) {
 }
 ```  
 
-```javascript
+#### 6.2 求二叉树的遍历  
 
+给定一棵二叉树的前序遍历和中序遍历，求其后序遍历  
+
+输入描述:  
+
+两个字符串，其长度n均小于等于26。 第一行为前序遍历，第二行为中序遍历。 二叉树中的结点名称以大写字母表示：A，B，C....最多26个结点。  
+
+输出描述:  
+
+输入样例可能有多组，对于每组测试样例， 输出一行，为后序遍历的字符串。 
+
+```
+输入：
+ABC
+BAC
+FDXEAG
+XDEFAG
+
+输出：
+BCA
+XEDGAF
+```
+
+**思路：**  
+
++ 前序遍历找到根结点 `root`
++ 找到 `root` 在中序遍历的位置 $\rightarrow$ 左子树的长度和右子树的长度
++ 截取左子树的中序遍历、右子树的中序遍历
++ 截取左子树的前序遍历、右子树的前序遍历
++ 递归拼接二叉树的后序遍历
+
+```javascript
+function reConstructBinaryTree(pre, vin) {
+    if(pre.length === 0){
+        return '';
+    }
+    if(pre.length === 1){
+        return pre[0];
+    }
+    const value = pre[0];
+    const index = vin.indexOf(value);
+    const vinLeft = vin.slice(0,index);
+    const vinRight = vin.slice(index+1);
+    const preLeft = pre.slice(1,index+1);
+    const preRight = pre.slice(index+1);
+    return reConstructBinaryTree(preLeft, vinLeft) + reConstructBinaryTree(preRight, vinRight) + value;
+}
+```  
+
+#### 6.3 单值二叉树  
+
+[leetcode 965 easy](https://leetcode.cn/problems/univalued-binary-tree/)  
+
+如果二叉树每个节点都具有相同的值，那么该二叉树就是单值二叉树。  
+
+只有给定的树是单值二叉树时，才返回 true；否则返回 false。  
+
+二叉树的题目，递归就完事了，此题也是对树进行深度优先搜索，当搜索到节点 $x$ 时，我们检查 $x$ 与 $x$ 的每一个子节点之间的边是否满足要求。  
+
+```TypeScript
+class TreeNode {
+    val: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+function isUnivalTree(root: TreeNode | null): boolean {
+    if (root == null) {
+        return true;
+    }
+    if (root.left != null && root.left.val != root.val) {
+        return false;
+    }
+    if (root.right != null && root.right.val != root.val) {
+        return false;
+    }
+    return isUnivalTree(root.left) && isUnivalTree(root.right);
+}
+```  
+
+#### 6.4 相同的树  
+
+[leetcode 100 easy](https://leetcode.cn/problems/same-tree/)  
+
+给你两棵二叉树的根节点 $p$ 和 $q$ ，编写一个函数来检验这两棵树是否相同。  
+
+如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的。  
+
+深度优先搜索：
+
+```TypeScript
+class TreeNode {
+    val: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+    if (p == null && q == null) {
+        return true;
+    }
+    if (p == null || q == null) {
+        return false;
+    }
+    if (p.val != q.val) {
+        return false;
+    }
+    return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+}
+```  
+
+#### 6.5 对称二叉树  
+
+[leetcode 101 easy](https://leetcode.cn/problems/symmetric-tree/)  
+
+给你一个二叉树的根节点 `root` ， 检查它是否轴对称。
+
+```TypeScript
+class TreeNode {
+    val: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+function isSymmetric(root: TreeNode | null): boolean {
+    if (root == null || (root.left == null && root.right == null)) {
+        return true
+    }
+    return isSameTree(root.left, root.right);
+}
+function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+    if (p == null && q == null) {
+        return true;
+    }
+    if (p == null || q == null) {
+        return false;
+    }
+    if (p.val != q.val) {
+        return false;
+    }
+    return isSameTree(p.left, q.right) && isSameTree(p.right, q.left);
+}
+```  
+
+#### 6.6 二叉树的镜像  
+
+[剑指Offer 27 easy](https://leetcode.cn/problems/er-cha-shu-de-jing-xiang-lcof/)  
+
+请完成一个函数，输入一个二叉树，该函数输出它的镜像。  
+
+    输入：root = [4,2,7,1,3,6,9]  
+    输出：[4,7,2,9,6,3,1]  
+
+```TypeScript
+class TreeNode {
+    val: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+function mirrorTree(root: TreeNode | null): TreeNode | null {
+    if (root) {
+        let temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+        mirrorTree(root.left);
+        mirrorTree(root.right);
+    }
+    return root;
+};
+```  
+
+#### 6.7 另一棵树的子树  
+
+[leetcode 572 easy](https://leetcode.cn/problems/subtree-of-another-tree/)  
+
+给你两棵二叉树 `root` 和 `subRoot` 。检验 `root` 中是否包含和 `subRoot` 具有相同结构和节点值的子树。如果存在，返回 `true` ；否则，返回 `false` 。
+
+二叉树 `tree` 的一棵子树包括 `tree` 的某个节点和这个节点的所有后代节点。`tree` 也可以看做它自身的一棵子树。
+
+```TypeScript
+class TreeNode {
+    val: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {
+    if (root == null) {
+        return false;
+    }
+    if (isSameTree(root, subRoot)) {
+        return true;
+    }
+    return isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot);
+}
+function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+    if (p == null && q == null) {
+        return true;
+    }
+    if (p == null || q == null) {
+        return false;
+    }
+    if (p.val != q.val) {
+        return false;
+    }
+    return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+}
 ```  
