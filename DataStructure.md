@@ -322,7 +322,7 @@ ChildSiblingTree.prototype = {
 
 ### 1. 定义  
 
-二叉树是一种典型的树树状结构，每个节点最多有两个子树的树结构，通常子树被称作“左子树”和“右子树”。  
+二叉树 **( Binary Tree )** 是一种典型的树树状结构，每个节点最多有两个子树的树结构，通常子树被称作“左子树”和“右子树”。  
 
 ### 2. 特点  
 
@@ -874,18 +874,18 @@ function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
 
 ### 7. 二叉搜索树  
 
-二叉搜索树 **(BST)** 又叫做二叉查找树、二叉排序树，其特征有：  
+二叉搜索树 **( BST : Binary Search Tree )** 又叫做二叉查找树、二叉排序树，其特征有：  
 
 + 若左子树不为空，那么左子树的所有节点的值均小于它的根节点的值。  
 + 若右子树不为空，那么右子树的所有节点的值均大于它的根节点的值。  
 + 任意节点的左、右⼦子树也分别为二叉排序树。  
 + 没有键值相等的节点。  
 
-#### 7.1 二叉查找树的查询  
+#### 7.1 查询  
 
 因为二叉查找树的中序遍历有序性，即得到的递增的序列，由于有序，查找与二分查找类似，每次都可以缩小查找范围，因此查找效率很高。  
 
-算法步骤：  
+**算法步骤：**  
 
 + 1. 若二叉查找树为空，则查找失败，返回空指针。  
 + 2. 若二叉查找树非空，则将待查找关键字 `key` 与根结点的关键字 `node.value` 进行比较。  
@@ -893,4 +893,63 @@ function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
   + (2). 如果 `x < node.value`, 则递归查找左子树。  
   + (3). 如果 `x > node.value`, 则递归查找右子树。  
 
-时间复杂度： 最好的情况是 $O_{log(n)}$, 最坏情况是 $O_n$。  
+**时间复杂度：** 最好的情况是 $O_{log(n)}$, 最坏情况是 $O_n$。  
+
+```javascript
+findNodeByValue (root, value) {
+    // 节点为空，则证明查询失败
+    if (!root) {
+        return null;
+    }
+    if (root.value == value) {
+        return root;
+    }
+    if (root.value > value) {
+        return this.findNodeByValue(root.left, value);
+    }
+    if (root.value < value) {
+        return this.findNodeByValue(root.right, value);
+    }
+}
+```  
+
+#### 7.2 插入  
+
+因为二叉查找树的中序遍历存在有序性，所以首先要查找待插入元素的插入位置，当查找不成功时再将待插入元素作为新的叶子结点，成为最后一个查找节点的左孩子或者右孩子。  
+
+**算法步骤：**  
+
++ 1. 若二叉查找树为空，则创建一个新的节点 `S`，将待插入关键字放入新节点的数据域，然后将 `S` 结点作为根结点，`S` 节点的左右子树都设置为空。  
++ 2. 若二叉查找树非空，则将带插入元素 `e` 和根结点的关键字 `node.value` 比较。  
+  + (1). 如果 `e <= node.value`, 则将 `e` 插入到左子树中。 
+  + (2). 如果 `e > node.value`, 则将 `e` 插入到右子树中。  
+
+**时间复杂度：** 在二叉查找树中进行插入操作时需要先查找插入位置，插入本身只需要常数时间，但是查找插入位置的时间复杂度为 $O_{log(n)}$  
+
+```javascript
+insert (root, value) {
+    // 树为空时
+    if (!root) {
+        root = new TreeNode(value, null, null);
+        return root;
+    }
+
+    // 若插入的值比当前节点小，则继续查找当前节点的左子树
+    if (root.value >= value && root.left) {
+        this.insert(root.left, value);
+    } else if (root.value >= value) {
+        root.left = new TreeNode(value, null, null);
+    }
+    // 若插入的值比当前节点大，则继续查找当前节点的右子树
+    if (root.value < value && root.right) {
+        this.insert(root.right, value);
+    } else if (root.right < value) {
+        root.right = new TreeNode(value, null, null);
+    }
+    
+    return root;
+}
+```  
+
+#### 7.3 删除  
+
