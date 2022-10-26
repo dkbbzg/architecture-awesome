@@ -103,3 +103,7 @@
       * [6.6 二叉树的镜像](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#66-二叉树的镜像)  
       * [6.7 另一棵树的子树](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#67-另一棵树的子树)  
     * [7. 二叉搜索树](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#7-二叉搜索树)  
+      * [7.1 查询](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#71-查询)  
+      * [7.2 插入](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#72-插入)  
+      * [7.3 删除](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#73-删除)  
+      * [7.4 遍历](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#74-遍历)  

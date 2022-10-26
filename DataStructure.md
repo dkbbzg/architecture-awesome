@@ -895,8 +895,8 @@ function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
 
 **时间复杂度：** 最好的情况是 $O_{log(n)}$, 最坏情况是 $O_n$。  
 
-```javascript
-findNodeByValue (root, value) {
+```typescript
+function findNodeByValue (root: TreeNode, value: number): TreeNode {
     // 节点为空，则证明查询失败
     if (!root) {
         return null;
@@ -926,8 +926,10 @@ findNodeByValue (root, value) {
 
 **时间复杂度：** 在二叉查找树中进行插入操作时需要先查找插入位置，插入本身只需要常数时间，但是查找插入位置的时间复杂度为 $O_{log(n)}$  
 
-```javascript
-insert (root, value) {
+**代码实现：**  
+
+```typescript
+function insert (root: TreeNode, value: number): TreeNode {
     // 树为空时
     if (!root) {
         root = new TreeNode(value, null, null);
@@ -953,3 +955,182 @@ insert (root, value) {
 
 #### 7.3 删除  
 
+首先在二叉查找树中找到待删除节点，然后执行删除操作。假设指针 `p` 指向待删除节点，指针 `f` 指向 `p` 的父节点。根据待删除节点所在位置的不同，删除操作的处理方法也不同。分为三种情况：  
+
+1. 被删除节点的左子树为空，右子树存在：那么令其右子树代替被删除节点的位置即可。  
+
+    ![img](images/DataStructure/二叉查找树删除无左子树.png)  
+
+2. 被删除节点的右子树为空，左子树存在：那么令其左子树替代被删除节点的位置即可。  
+
+    ![img](images/DataStructure/二叉查找树删除无右子树.png)  
+
+3. 被删除节点的左右子树都不为空：根据二叉查找树的中序遍历有序性，删除该节点，可以利用其直接前驱或者直接后继来替代被删除的节点的位置，然后删除其直接前驱或者其直接后继即可。  
+
+    + **直接前驱** ： 在中序遍历中，节点 `p` 的直接前驱是其 **左子树的最右节点** ，即沿着 `p` 的左子树一直访问其右子树，直到没有右子树，这样就找到了最右节点，也就是直接前驱。如图a  
+    + **直接后继** ： 在中序遍历中，节点 `p` 的直接后继就是其 **右子树中的最左节点** 。即沿着 `p` 的右子树一直访问其左子树，直到没有左子树，这样就找到了最左节点，也就是直接后继。如图b  
+
+    ![img](images/DataStructure/二叉查找树删除有左右子树.png)  
+
+**代码实现：**  
+
+```typescript
+function remove(root: TreeNode, value: number): TreeNode {
+    // 节点为空，则证明查找失败
+    if (!root) {
+        return null;
+    }
+
+    if (root.value == value) {
+        // 找到替换当前 node 的 node
+        let node = this.startRemove(root);
+        return node;
+    }
+
+    if (root.value > value) {
+        root.left = this.remove(root.left, value);
+        return root;
+    }
+
+    if (root.value < value) {
+        root.right = this.remove(root.right, value);
+        return root;
+    }
+}
+
+function startRemove(node: TreeNode): TreeNode {
+    // 判断四种情况
+    // 当前节点是叶子节点，不存在左子树
+    if (!node.left && !node.right) {
+        return null;
+    }
+    // 当前节点不存在右子树，但是存在左子树
+    else if (!node.right) {
+        return node.left;
+    }
+    // 当前节点不存在左子树，但是存在右子树
+    else if (!node.left) {
+        return node.right;
+    }
+    // 当前节点存在左右子树，找当前节点的直接前驱或直接后继来替换
+    else {
+        let successorNode = node.right;
+        let parent = node;
+        while (successorNode.left) {
+            parent = successorNode;
+            successorNode = successorNode.left;
+        }
+
+        if (node != parent) {
+            parent.left = successorNode.right;
+            successorNode.left = node.left;
+            successorNode.right = node.right;
+        } else {
+            parent.right = null;
+        }
+        // 后继节点
+        return successorNode;
+    }
+}
+```  
+
+#### 7.4 遍历  
+
+```typeScript
+// 结构
+class TreeNode {
+    value: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(value?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.value = (value === undefined ? 0 : value);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+
+class BinarySearchTree {
+    root: TreeNode || null;
+    constructor(root?: TreeNode | null) {
+        this.root = (root === undefined ? null : root);
+    }
+
+    // 创建二叉树
+    insert (root?: TreeNode | null, value: number): TreeNode {
+        if (!root) {
+            return new TreeNode(value);
+        }
+
+        // 判断新增节点为左子树的节点
+        if (root.value >= value) {
+            root.left = this.insert(root.left, value);
+        }
+
+        // 判断新增节点为右子树的节点
+        if (root.value < value) {
+            root.right = this.insert(root.right, value);
+        }
+
+        return root;
+    }
+
+    // 遍历
+    show (root?: TreeNode | null): void {
+        if (!root) {
+            return;
+        }
+        this.show(root.left);
+        console.log(root.value);
+        this.show(root.right);
+    }
+
+    // 查找
+    find (root?: TreeNode | null, value: number): TreeNode | null {
+        if (!root) {
+            return null;
+        }
+        // 在左子树上查找
+        if (root.value > value) {
+            return this.find(root.left, value);
+        }
+        // 在右子树上查找
+        if (root.value < value) {
+            return this.find(root.right, value);
+        }
+        if (root.value == value) {
+            return root;
+        }
+        return null;
+    }
+
+    // 删除
+    remove (root?: TreeNode | null, value: number): TreeNode | null {
+        if (!root) {
+            return null;
+        }
+        if (root.value > value) {
+            root.left = this.remove(root.left, value);
+            return root;
+        }
+        if (root.value < value) {
+            root.right = this.remove(root.right, value);
+            return root;
+        }
+        if (!root.left && !root.right) {
+            return null;
+        } else if (!root.right) {
+            return root.left;
+        } else if (!root.left) {
+            return root.right;
+        } else {
+            left node = root.right;
+            while (node.left) {
+                node = node.left;
+            }
+            root.value = node.value;
+            root.right = this.remove(root.right, node.value);
+            return root;
+        }
+    }
+}
+```
