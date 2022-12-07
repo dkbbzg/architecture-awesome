@@ -126,3 +126,5 @@
       * [7.2 插入](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#72-插入)  
       * [7.3 删除](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#73-删除)  
       * [7.4 遍历](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#74-遍历)  
+      * [7.5 二叉搜索树的第 K 个节点](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#75-二叉搜索树的第-K-个节点)  
+      * [7.6 二叉搜索树的后序遍历](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#76-二叉搜索树的后序遍历)  

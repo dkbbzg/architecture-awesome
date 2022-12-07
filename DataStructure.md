@@ -895,7 +895,7 @@ function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
 
 **时间复杂度：** 最好的情况是 $O_{log(n)}$, 最坏情况是 $O_n$。  
 
-```typescript
+```TypeScript
 function findNodeByValue (root: TreeNode, value: number): TreeNode {
     // 节点为空，则证明查询失败
     if (!root) {
@@ -928,7 +928,7 @@ function findNodeByValue (root: TreeNode, value: number): TreeNode {
 
 **代码实现：**  
 
-```typescript
+```TypeScript
 function insert (root: TreeNode, value: number): TreeNode {
     // 树为空时
     if (!root) {
@@ -974,7 +974,7 @@ function insert (root: TreeNode, value: number): TreeNode {
 
 **代码实现：**  
 
-```typescript
+```TypeScript
 function remove(root: TreeNode, value: number): TreeNode {
     // 节点为空，则证明查找失败
     if (!root) {
@@ -1036,7 +1036,7 @@ function startRemove(node: TreeNode): TreeNode {
 
 #### 7.4 遍历  
 
-```typeScript
+```TypeScript
 // 结构
 class TreeNode {
     value: number;
@@ -1146,7 +1146,7 @@ class BinarySearchTree {
 
 **代码：**  
 
-```typeScript
+```TypeScript
 // 递归实现
 function KthNode(pRoot: TreeNode | null, k: number): number | null {
     const arr: number[] = [];
@@ -1184,4 +1184,133 @@ function KthNode(pRoot: TreeNode | null, k: number): number | null {
     }
     return null;
 }
-```
+```  
+
+#### 7.6 二叉搜索树的后序遍历
+
+输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。如果是则输出Yes，否则输出No。假设输入的数组的任意两个数字都不互相同。  
+
+**思路：**  
+
+1. 后序遍历：分成三部分：最后一个节点为根节点，第二部分为左子树的值比根节点都小，第三部分为右子树的值比根节点都大。
+2. 先检测左子树，左侧比根节点小的值都判定为左子树。
+3. 除最后一个节点外和左子树外的其他值为右子树，右子树有一个比根节点小，则返回false。
+4. 若存在，左、右子树，递归检测左、右子树是否符合规范。
+
+**代码：**  
+
+```TypeScript
+function VerifySquenceOfBST(sequence: number[]): boolean {
+    if (sequence && sequence.length > 0) {
+        let left: boolean = true;
+        let right: boolean = true;
+        let root: number = sequence[sequence.length - 1];
+        for (let i: number = 0; i < sequence.length - 1; i++) {
+            if (sequence[i] > root) {
+                break;
+            }
+        }
+        for (let j: number = i; j < sequence.length - 1; j++) {
+            if (sequence[j] > root) {
+                return false;
+            }
+        }
+        if (i) {
+            left = VerifySquenceOfBST(sequence.slice(0, i));
+        }
+        if (i < sequence.length - 1) {
+            right = VerifySquenceOfBST(sequence.slice(i, sequence.length - 1));
+        }
+        return left && right;
+    }
+}
+```  
+
+### 8. 二叉树的深度  
+
+二叉树的深度为根节点到最远叶子结点的最长路径上的节点数。  
+
+平衡二叉树： 左右子树深度只差大于1。
+
+#### 8.1 二叉树的最大深度  
+
+给定一个二叉树，找出其最大深度。  
+二叉树的深度为根节点到最远叶子结点的最长路径上的节点数。  
+示例：  
+给定二叉树 `[3, 9, 20, null, null, 15, 7]`,  返回它的最大深度 3。
+
+**思路：**  
+
++ 深度优先遍历 + 分治
++ 一颗二叉树的最大深度等于左子树深度和右子树最大深度的最大值 + 1
+
+**代码：**  
+
+```TypeScript
+function TreeDepth(pRoot: TreeNode | null): number {
+    return !pRoot ? 0 : Math.max(TreeDepth(pRoot.left), TreeDepth(pRoot.right)) + 1;
+}
+```  
+
+#### 8.2 二叉树的最小深度  
+
+给定一个二叉树，找出其最小深度。  
+最小深度是从根节点到最近叶子节点的最短路径上的节点数量。 
+示例：
+给定二叉树 `[3, 9, 20, null, null, 15, 7]`,  返回它的最大深度 2。
+
+**思路：**  
+
++ 左右子树都不为空：左子树深度和右子树最小深度的最小值 + 1。
++ 左树为空：右子树最小深度的最小值 + 1。
++ 右树为空：左子树最小深度 + 1
+
+**代码：**  
+
+```TypeScript
+function minDepth(root: TreeNode | null): number {
+    if (!root) {
+        return 0;
+    }
+    if (!root.left) {
+        return 1 + minDepth(root.right);
+    }
+    if (!root.right) {
+        return 1 + minDepth(root.left);
+    }
+    return Math.min(minDepth(root.left), minDepth(root.right)) + 1
+};
+```  
+
+#### 8.3 平衡二叉树  
+
+输入一棵二叉树，判断该二叉树是否是平衡二叉树 ( 每个子树的深度之差不超过1 )。  
+
+**思路：**  
+
++ 后续遍历二叉树
++ 在遍历二叉树每个节点前都会遍历其左右子树
++ 比较左右子树的深度，若差值大于1 则返回一个标记 -1表示当前子树不平衡
++ 左右子树有一个不是平衡的，或左右子树差值大于1，则整课树不平衡
++ 若左右子树平衡，返回当前树的深度（左右子树的深度最大值+1）
+
+**代码：**  
+
+```TypeScript
+function IsBalanced_Solution(pRoot: TreeNode | null): boolean {
+    return balanced(pRoot) != -1;
+}
+
+function balanced(node: TreeNode | null) {
+    if (!node) {
+        return 0;
+    }
+    const left = balanced(node.left);
+    const right = balanced(node.right);
+    if (left == -1 || right == -1 || Math.abs(left - right) > 1) {
+        return -1;
+    }
+    return Math.max(left, right) + 1;
+}
+
+```  
