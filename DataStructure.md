@@ -322,7 +322,7 @@ ChildSiblingTree.prototype = {
 
 ### 1. 定义  
 
-二叉树是一种典型的树树状结构，每个节点最多有两个子树的树结构，通常子树被称作“左子树”和“右子树”。  
+二叉树 **( Binary Tree )** 是一种典型的树树状结构，每个节点最多有两个子树的树结构，通常子树被称作“左子树”和“右子树”。  
 
 ### 2. 特点  
 
@@ -450,7 +450,7 @@ function BinaryParentTree(data, parent, leftChild, rightChild) {
 2. 非递归：  
     取根节点为目标节点，开始遍历   
     + 1. 访问目标节点   
-    + 2. 左孩子入栈 -> 直至左孩子为空的节点  
+    + 2. 左孩子入栈 $\rightarrow$ 直至左孩子为空的节点  
     + 3. 节点出栈，以右孩子为目标节点，再依次执行1、2、3  
 
     ```javascript
@@ -471,6 +471,717 @@ function BinaryParentTree(data, parent, leftChild, rightChild) {
     };
     ```  
 
-```javascript
+#### 5.2 中序遍历  
 
+从二叉树的根结点出发，当第二次到达结点时就输出结点数据，按照先向左再向右的方向访问。  
+
+![Alt](images/DataStructure/二叉树的前序遍历.png)  
+
+中序遍历的结果: HDIBJEAFCG  
+
+1. 递归：  
+    若二叉树为空，则遍历结束；
+    否则：  
+    + 1. 中序遍历左子树(递归调用本算法)  
+    + 2. 访问根结点  
+    + 3. 中序遍历右子树(递归调用本算法)  
+
+    ```javascript
+    const inorderTraversal = function (root, array = []) {
+        if (root) {
+            inorderTraversal(root.left, array);
+            array.push(root.val);
+            inorderTraversal(root.right, array);
+        }
+        return array;
+    };
+    ```  
+
+2. 非递归：  
+    取根节点为目标节点，开始遍历  
+    + 1. 左孩子入栈 $\rightarrow$ 直至左孩子为空的节点  
+    + 2. 节点出栈 $\rightarrow$ 访问该节点  
+    + 3. 以右孩子为目标节点，再依次执行1、2、3  
+
+    ```javascript
+    const inorderTraversal = function (root) {
+        const result = [];
+        const stack = [];
+        let current = root;
+        while (current || stack.length > 0) {
+            while (current) {
+                stack.push(current);
+                current = current.left;
+            }
+            current = stack.pop();
+            result.push(current.val);
+            current = current.right;
+        }
+        return result;
+    };
+    ```  
+
+#### 5.3 后序遍历  
+
+从二叉树的根结点出发，当第三次到达结点时就输出结点数据，按照先向左再向右的方向访问。  
+
+![Alt](images/DataStructure/二叉树的前序遍历.png)  
+
+后序遍历的结果: HIDJEBFGCA  
+
+1. 递归：  
+    若二叉树为空，则遍历结束；  
+    否则：  
+    + 1. 后序遍历左子树(递归调用本算法)  
+    + 2. 后序遍历右子树(递归调用本算法)  
+    + 3. 访问根结点  
+
+    ```javascript
+    const postorderTraversal = function (root, array = []) {
+        if (root) {
+            postorderTraversal(root.left, array);
+            postorderTraversal(root.right, array);
+            array.push(root.val);
+        }
+        return array;
+    };
+    ```  
+
+2. 非递归：  
+    取根节点为目标节点，开始遍历  
+    + 1. 左孩子入栈 $\rightarrow$ 直至左孩子为空的节点  
+    + 2. 栈顶节点的右节点为空或右节点被访问过 $\rightarrow$ 节点出栈并访问他，将节点标记为已访问  
+    + 3. 栈顶节点的右节点不为空且未被访问，以右孩子为目标节点，再依次执行1、2、3  
+
+    ```javascript
+    const postorderTraversal = function (root) {
+        const result = [];
+        const stack = [];
+        let last = null; // 标记上一个访问的节点
+        let current = root;
+        while (current || stack.length > 0) {
+            while (current) {
+                stack.push(current);
+                current = current.left;
+            }
+            current = stack[stack.length - 1];
+            if (!current.right || current.right == last) {
+                current = stack.pop();
+                result.push(current.val);
+                last = current;
+                current = null; // 继续弹栈
+            } else {
+                current = current.right;
+            }
+        }
+        return result;
+    }
+
+    ```  
+
+#### 5.4 层次遍历  
+
+按照树的层次自上而下的遍历二叉树。
+
+![Alt](images/DataStructure/二叉树的前序遍历.png)  
+
+层次遍历的结果: ABCDEFGHIJ  
+
+实现层序遍历会用到队列的实现，这里就不用写出来了。  
+
+层序遍历可以用来判断二叉树是否是完全二叉树，通过一层一层的走，遇到空之后，后续层序不能有非空，如果有非空就不是完全二叉树。  
+
+比如:  
+` ['A', 'B', 'C', null, null, 'D', null] ` 不是完全二叉树  
+` ['A', 'B', 'C', 'D', null, null, null] ` 是完全二叉树
+
+### 6. 二叉树的练习
+
+#### 6.1 二叉树重建  
+
+输入某二叉树的前序遍历和中序遍历的结果，重建出该二叉树。  
+假设输入的前序遍历和中序遍历的结果中都不含重复的数字。  
+
+例如输入前序遍历序列 `{1,2,4,7,3,5,6,8}` 和中序遍历序列 `{4,7,2,1,5,3,8,6}`，则重建二叉树并返回。  
+
+**思路：**  
+
++ 前序遍历：根节点 + 左子树前序遍历 + 右子树前序遍历  
++ 中序遍历：左子树中序遍历 + 根节点 + 右字数中序遍历  
++ 后序遍历：左子树后序遍历 + 右子树后序遍历 + 根节点  
+
+根据上面的规律：  
+
++ 前序遍历找到根结点 `root`
++ 找到 `root` 在中序遍历的位置 $\rightarrow$ 左子树的长度和右子树的长度  
++ 截取左子树的中序遍历、右子树的中序遍历  
++ 截取左子树的前序遍历、右子树的前序遍历  
++ 递归重建二叉树  
+
+![Alt](images/DataStructure/重建二叉树的前中序遍历.png)  
+
+```javascript
+function reConstructBinaryTree(pre, vin) {
+    if(pre.length === 0){
+        return null;
+    }
+    if(pre.length === 1){
+        return new TreeNode(pre[0]);
+    }
+    const value = pre[0];
+    const index = vin.indexOf(value);
+    const vinLeft = vin.slice(0,index);
+    const vinRight = vin.slice(index+1);
+    const preLeft = pre.slice(1,index+1);
+    const preRight = pre.slice(index+1);
+    const node = new TreeNode(value);
+    node.left = reConstructBinaryTree(preLeft, vinLeft);
+    node.right = reConstructBinaryTree(preRight, vinRight);
+    return node;
+}
 ```  
+
+#### 6.2 求二叉树的遍历  
+
+给定一棵二叉树的前序遍历和中序遍历，求其后序遍历  
+
+输入描述:  
+
+两个字符串，其长度n均小于等于26。 第一行为前序遍历，第二行为中序遍历。 二叉树中的结点名称以大写字母表示：A，B，C....最多26个结点。  
+
+输出描述:  
+
+输入样例可能有多组，对于每组测试样例， 输出一行，为后序遍历的字符串。 
+
+```
+输入：
+ABC
+BAC
+FDXEAG
+XDEFAG
+
+输出：
+BCA
+XEDGAF
+```
+
+**思路：**  
+
++ 前序遍历找到根结点 `root`
++ 找到 `root` 在中序遍历的位置 $\rightarrow$ 左子树的长度和右子树的长度
++ 截取左子树的中序遍历、右子树的中序遍历
++ 截取左子树的前序遍历、右子树的前序遍历
++ 递归拼接二叉树的后序遍历
+
+```javascript
+function reConstructBinaryTree(pre, vin) {
+    if(pre.length === 0){
+        return '';
+    }
+    if(pre.length === 1){
+        return pre[0];
+    }
+    const value = pre[0];
+    const index = vin.indexOf(value);
+    const vinLeft = vin.slice(0,index);
+    const vinRight = vin.slice(index+1);
+    const preLeft = pre.slice(1,index+1);
+    const preRight = pre.slice(index+1);
+    return reConstructBinaryTree(preLeft, vinLeft) + reConstructBinaryTree(preRight, vinRight) + value;
+}
+```  
+
+#### 6.3 单值二叉树  
+
+[leetcode 965 easy](https://leetcode.cn/problems/univalued-binary-tree/)  
+
+如果二叉树每个节点都具有相同的值，那么该二叉树就是单值二叉树。  
+
+只有给定的树是单值二叉树时，才返回 true；否则返回 false。  
+
+二叉树的题目，递归就完事了，此题也是对树进行深度优先搜索，当搜索到节点 $x$ 时，我们检查 $x$ 与 $x$ 的每一个子节点之间的边是否满足要求。  
+
+```TypeScript
+class TreeNode {
+    val: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+function isUnivalTree(root: TreeNode | null): boolean {
+    if (root == null) {
+        return true;
+    }
+    if (root.left != null && root.left.val != root.val) {
+        return false;
+    }
+    if (root.right != null && root.right.val != root.val) {
+        return false;
+    }
+    return isUnivalTree(root.left) && isUnivalTree(root.right);
+}
+```  
+
+#### 6.4 相同的树  
+
+[leetcode 100 easy](https://leetcode.cn/problems/same-tree/)  
+
+给你两棵二叉树的根节点 $p$ 和 $q$ ，编写一个函数来检验这两棵树是否相同。  
+
+如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的。  
+
+深度优先搜索：
+
+```TypeScript
+class TreeNode {
+    val: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+    if (p == null && q == null) {
+        return true;
+    }
+    if (p == null || q == null) {
+        return false;
+    }
+    if (p.val != q.val) {
+        return false;
+    }
+    return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+}
+```  
+
+#### 6.5 对称二叉树  
+
+[leetcode 101 easy](https://leetcode.cn/problems/symmetric-tree/)  
+
+给你一个二叉树的根节点 `root` ， 检查它是否轴对称。
+
+```TypeScript
+class TreeNode {
+    val: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+function isSymmetric(root: TreeNode | null): boolean {
+    if (root == null || (root.left == null && root.right == null)) {
+        return true
+    }
+    return isSameTree(root.left, root.right);
+}
+function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+    if (p == null && q == null) {
+        return true;
+    }
+    if (p == null || q == null) {
+        return false;
+    }
+    if (p.val != q.val) {
+        return false;
+    }
+    return isSameTree(p.left, q.right) && isSameTree(p.right, q.left);
+}
+```  
+
+#### 6.6 二叉树的镜像  
+
+[剑指Offer 27 easy](https://leetcode.cn/problems/er-cha-shu-de-jing-xiang-lcof/)  
+
+请完成一个函数，输入一个二叉树，该函数输出它的镜像。  
+
+    输入：root = [4,2,7,1,3,6,9]  
+    输出：[4,7,2,9,6,3,1]  
+
+```TypeScript
+class TreeNode {
+    val: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+function mirrorTree(root: TreeNode | null): TreeNode | null {
+    if (root) {
+        let temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+        mirrorTree(root.left);
+        mirrorTree(root.right);
+    }
+    return root;
+};
+```  
+
+#### 6.7 另一棵树的子树  
+
+[leetcode 572 easy](https://leetcode.cn/problems/subtree-of-another-tree/)  
+
+给你两棵二叉树 `root` 和 `subRoot` 。检验 `root` 中是否包含和 `subRoot` 具有相同结构和节点值的子树。如果存在，返回 `true` ；否则，返回 `false` 。
+
+二叉树 `tree` 的一棵子树包括 `tree` 的某个节点和这个节点的所有后代节点。`tree` 也可以看做它自身的一棵子树。
+
+```TypeScript
+class TreeNode {
+    val: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {
+    if (root == null) {
+        return false;
+    }
+    if (isSameTree(root, subRoot)) {
+        return true;
+    }
+    return isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot);
+}
+function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+    if (p == null && q == null) {
+        return true;
+    }
+    if (p == null || q == null) {
+        return false;
+    }
+    if (p.val != q.val) {
+        return false;
+    }
+    return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+}
+```  
+
+### 7. 二叉搜索树  
+
+二叉搜索树 **( BST : Binary Search Tree )** 又叫做二叉查找树、二叉排序树，其特征有：  
+
++ 若左子树不为空，那么左子树的所有节点的值均小于它的根节点的值。  
++ 若右子树不为空，那么右子树的所有节点的值均大于它的根节点的值。  
++ 任意节点的左、右⼦子树也分别为二叉排序树。  
++ 没有键值相等的节点。  
+
+#### 7.1 查询  
+
+因为二叉查找树的中序遍历有序性，即得到的递增的序列，由于有序，查找与二分查找类似，每次都可以缩小查找范围，因此查找效率很高。  
+
+**算法步骤：**  
+
++ 1. 若二叉查找树为空，则查找失败，返回空指针。  
++ 2. 若二叉查找树非空，则将待查找关键字 `key` 与根结点的关键字 `node.value` 进行比较。  
+  + (1). 如果 `x = node.value`, 则查找成功，返回查询到的当前结点 T。 
+  + (2). 如果 `x < node.value`, 则递归查找左子树。  
+  + (3). 如果 `x > node.value`, 则递归查找右子树。  
+
+**时间复杂度：** 最好的情况是 $O_{log(n)}$, 最坏情况是 $O_n$。  
+
+```typescript
+function findNodeByValue (root: TreeNode, value: number): TreeNode {
+    // 节点为空，则证明查询失败
+    if (!root) {
+        return null;
+    }
+    if (root.value == value) {
+        return root;
+    }
+    if (root.value > value) {
+        return this.findNodeByValue(root.left, value);
+    }
+    if (root.value < value) {
+        return this.findNodeByValue(root.right, value);
+    }
+}
+```  
+
+#### 7.2 插入  
+
+因为二叉查找树的中序遍历存在有序性，所以首先要查找待插入元素的插入位置，当查找不成功时再将待插入元素作为新的叶子结点，成为最后一个查找节点的左孩子或者右孩子。  
+
+**算法步骤：**  
+
++ 1. 若二叉查找树为空，则创建一个新的节点 `S`，将待插入关键字放入新节点的数据域，然后将 `S` 结点作为根结点，`S` 节点的左右子树都设置为空。  
++ 2. 若二叉查找树非空，则将带插入元素 `e` 和根结点的关键字 `node.value` 比较。  
+  + (1). 如果 `e <= node.value`, 则将 `e` 插入到左子树中。 
+  + (2). 如果 `e > node.value`, 则将 `e` 插入到右子树中。  
+
+**时间复杂度：** 在二叉查找树中进行插入操作时需要先查找插入位置，插入本身只需要常数时间，但是查找插入位置的时间复杂度为 $O_{log(n)}$  
+
+**代码实现：**  
+
+```typescript
+function insert (root: TreeNode, value: number): TreeNode {
+    // 树为空时
+    if (!root) {
+        root = new TreeNode(value, null, null);
+        return root;
+    }
+
+    // 若插入的值比当前节点小，则继续查找当前节点的左子树
+    if (root.value >= value && root.left) {
+        this.insert(root.left, value);
+    } else if (root.value >= value) {
+        root.left = new TreeNode(value, null, null);
+    }
+    // 若插入的值比当前节点大，则继续查找当前节点的右子树
+    if (root.value < value && root.right) {
+        this.insert(root.right, value);
+    } else if (root.right < value) {
+        root.right = new TreeNode(value, null, null);
+    }
+    
+    return root;
+}
+```  
+
+#### 7.3 删除  
+
+首先在二叉查找树中找到待删除节点，然后执行删除操作。假设指针 `p` 指向待删除节点，指针 `f` 指向 `p` 的父节点。根据待删除节点所在位置的不同，删除操作的处理方法也不同。分为三种情况：  
+
+1. 被删除节点的左子树为空，右子树存在：那么令其右子树代替被删除节点的位置即可。  
+
+    ![img](images/DataStructure/二叉查找树删除无左子树.png)  
+
+2. 被删除节点的右子树为空，左子树存在：那么令其左子树替代被删除节点的位置即可。  
+
+    ![img](images/DataStructure/二叉查找树删除无右子树.png)  
+
+3. 被删除节点的左右子树都不为空：根据二叉查找树的中序遍历有序性，删除该节点，可以利用其直接前驱或者直接后继来替代被删除的节点的位置，然后删除其直接前驱或者其直接后继即可。  
+
+    + **直接前驱** ： 在中序遍历中，节点 `p` 的直接前驱是其 **左子树的最右节点** ，即沿着 `p` 的左子树一直访问其右子树，直到没有右子树，这样就找到了最右节点，也就是直接前驱。如图a  
+    + **直接后继** ： 在中序遍历中，节点 `p` 的直接后继就是其 **右子树中的最左节点** 。即沿着 `p` 的右子树一直访问其左子树，直到没有左子树，这样就找到了最左节点，也就是直接后继。如图b  
+
+    ![img](images/DataStructure/二叉查找树删除有左右子树.png)  
+
+**代码实现：**  
+
+```typescript
+function remove(root: TreeNode, value: number): TreeNode {
+    // 节点为空，则证明查找失败
+    if (!root) {
+        return null;
+    }
+
+    if (root.value == value) {
+        // 找到替换当前 node 的 node
+        let node = this.startRemove(root);
+        return node;
+    }
+
+    if (root.value > value) {
+        root.left = this.remove(root.left, value);
+        return root;
+    }
+
+    if (root.value < value) {
+        root.right = this.remove(root.right, value);
+        return root;
+    }
+}
+
+function startRemove(node: TreeNode): TreeNode {
+    // 判断四种情况
+    // 当前节点是叶子节点，不存在左子树
+    if (!node.left && !node.right) {
+        return null;
+    }
+    // 当前节点不存在右子树，但是存在左子树
+    else if (!node.right) {
+        return node.left;
+    }
+    // 当前节点不存在左子树，但是存在右子树
+    else if (!node.left) {
+        return node.right;
+    }
+    // 当前节点存在左右子树，找当前节点的直接前驱或直接后继来替换
+    else {
+        let successorNode = node.right;
+        let parent = node;
+        while (successorNode.left) {
+            parent = successorNode;
+            successorNode = successorNode.left;
+        }
+
+        if (node != parent) {
+            parent.left = successorNode.right;
+            successorNode.left = node.left;
+            successorNode.right = node.right;
+        } else {
+            parent.right = null;
+        }
+        // 后继节点
+        return successorNode;
+    }
+}
+```  
+
+#### 7.4 遍历  
+
+```typeScript
+// 结构
+class TreeNode {
+    value: number;
+    left: TreeNode || null;
+    right: TreeNode || null;
+    constructor(value?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.value = (value === undefined ? 0 : value);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+}
+
+class BinarySearchTree {
+    root: TreeNode || null;
+    constructor(root?: TreeNode | null) {
+        this.root = (root === undefined ? null : root);
+    }
+
+    // 创建二叉树
+    insert (root?: TreeNode | null, value: number): TreeNode {
+        if (!root) {
+            return new TreeNode(value);
+        }
+
+        // 判断新增节点为左子树的节点
+        if (root.value >= value) {
+            root.left = this.insert(root.left, value);
+        }
+
+        // 判断新增节点为右子树的节点
+        if (root.value < value) {
+            root.right = this.insert(root.right, value);
+        }
+
+        return root;
+    }
+
+    // 遍历
+    show (root?: TreeNode | null): void {
+        if (!root) {
+            return;
+        }
+        this.show(root.left);
+        console.log(root.value);
+        this.show(root.right);
+    }
+
+    // 查找
+    find (root?: TreeNode | null, value: number): TreeNode | null {
+        if (!root) {
+            return null;
+        }
+        // 在左子树上查找
+        if (root.value > value) {
+            return this.find(root.left, value);
+        }
+        // 在右子树上查找
+        if (root.value < value) {
+            return this.find(root.right, value);
+        }
+        if (root.value == value) {
+            return root;
+        }
+        return null;
+    }
+
+    // 删除
+    remove (root?: TreeNode | null, value: number): TreeNode | null {
+        if (!root) {
+            return null;
+        }
+        if (root.value > value) {
+            root.left = this.remove(root.left, value);
+            return root;
+        }
+        if (root.value < value) {
+            root.right = this.remove(root.right, value);
+            return root;
+        }
+        if (!root.left && !root.right) {
+            return null;
+        } else if (!root.right) {
+            return root.left;
+        } else if (!root.left) {
+            return root.right;
+        } else {
+            left node = root.right;
+            while (node.left) {
+                node = node.left;
+            }
+            root.value = node.value;
+            root.right = this.remove(root.right, node.value);
+            return root;
+        }
+    }
+}
+```
+
+#### 7.5 二叉搜索树的第 K 个节点  
+
+给定一棵二叉搜索树，请找出其中的第k小的结点。
+例如， （5，3，7，2，4，6，8） 中，按结点数值大小顺序第三小结点的值为4。  
+
+**思路：**  
+
+二叉搜索树的中序遍历即排序后的节点，本题实际考察二叉树的遍历。  
+
+**代码：**  
+
+```typeScript
+// 递归实现
+function KthNode(pRoot: TreeNode | null, k: number): number | null {
+    const arr: number[] = [];
+    loopThrough(pRoot, arr);
+    if (k > 0 && k <= arr.length) {
+        return arr[k - 1];
+    }
+    return null;
+}
+
+function loopThrough(node: TreeNode | null, arr: number[]): void {
+    if (node) {
+        loopThrough(node.left, arr);
+        arr.push(node);
+        loopThrough(node.right, arr);
+    }
+}
+
+// 非递归实现
+function KthNode(pRoot: TreeNode | null, k: number): number | null {
+    const arr: number[] = [];
+    const stack: TreeNode[] = [];
+    let current: TreeNode | null = pRoot;
+    while (stack.length > 0 || current) {
+        while (current) {
+            stack.push(current);
+            current = current.left;
+        }
+        current = stack.pop();
+        arr.push(current);
+        current = current.right;
+    }
+    if (k > 0 && k <= arr.length) {
+        return arr[k - 1];
+    }
+    return null;
+}
+```
