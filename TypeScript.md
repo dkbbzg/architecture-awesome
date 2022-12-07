@@ -6,14 +6,14 @@ TypeScript 是一种由微软开发的自由和开源的编程语言。它是 Ja
 TypeScript 提供最新的和不断发展的 JavaScript 特性，包括那些来自 2015 年的 ECMAScript 和未来的提案中的特性，比如异步功能和 Decorators，以帮助建立健壮的组件。
 
 ### TypeScript 与 JavaScript 的区别
-| TypeScript | JavaScript |
-| :---: | :---: |
-| JavaScript 的超集用于解决大型项目的代码复杂性 | 一种脚本语言，用于创建动态网页 |
-| 可以在编译期间发现并纠正错误 | 作为一种解释型语言，只能在运行时发现错误 |
-| 强类型，支持静态和动态类型 | 弱类型，没有静态类型选项 |
-| 最终被编译成 JavaScript 代码，使浏览器可以理解 | 可以直接在浏览器中使用 |
-| 支持模块、泛型和接口 | 不支持模块，泛型或接口 |
-| 社区的支持仍在增长，而且还不是很大 | 大量的社区支持以及大量文档和解决问题的支持|
+|                   TypeScript                   |                 JavaScript                 |
+| :--------------------------------------------: | :----------------------------------------: |
+| JavaScript 的超集用于解决大型项目的代码复杂性  |       一种脚本语言，用于创建动态网页       |
+|          可以在编译期间发现并纠正错误          |  作为一种解释型语言，只能在运行时发现错误  |
+|           强类型，支持静态和动态类型           |          弱类型，没有静态类型选项          |
+| 最终被编译成 JavaScript 代码，使浏览器可以理解 |           可以直接在浏览器中使用           |
+|              支持模块、泛型和接口              |           不支持模块，泛型或接口           |
+|       社区的支持仍在增长，而且还不是很大       | 大量的社区支持以及大量文档和解决问题的支持 |
 
 ## 二、TypeScript 基础类型
 
@@ -767,15 +767,15 @@ abc: {
 ## 七、TypeScript 函数  
 
 ### TypeScript 函数与 JavaScript 函数的区别  
-| TypeScript | JavaScript |
-| :---: | :---: |
-| 含有类型 | 无类型 |
-| 箭头函数 | 箭头函数 (ES2015) |
-| 函数类型 | 无函数类型 |
+|   TypeScript   |     JavaScript     |
+| :------------: | :----------------: |
+|    含有类型    |       无类型       |
+|    箭头函数    | 箭头函数 (ES2015)  |
+|    函数类型    |     无函数类型     |
 | 必填和可选参数 | 所有参数都是可选的 |
-| 默认参数 | 默认参数 |
-| 剩余参数 | 剩余参数 |
-| 函数重载 | 无函数重载 |
+|    默认参数    |      默认参数      |
+|    剩余参数    |      剩余参数      |
+|    函数重载    |     无函数重载     |
 
 ### 箭头函数  
 + **1. 常见语法**  
@@ -1406,3 +1406,415 @@ myGenericNumber.add = function (x, y) {
   ) => infer R ? R : any;
   ```  
   以上代码中 `infer R` 就是声明一个变量来承载传入函数签名的返回值类型，简单说就是用它取到函数返回值的类型方便之后使用。  
+
++ **5. extends**  
+  有时候我们定义的泛型不想过于灵活或者说想继承某些类等，可以通过 `extends` 关键字添加泛型约束。  
+
+  ```TypeScript
+  interface Lengthwise {
+    length: number;
+  }
+
+  function loggingIdentity<T extends LengthWise>(arg: T): T {
+    console.log(arg.length)l
+    return arg;
+  }
+  ```  
+
+  现在这个泛型函数被定义了约束，因此它不再是适用于任意类型：  
+
+  ```TypeScript
+  loggingIdentity(3);   // Error, number doesn't have a .length property
+  ```  
+
+  这时需要传入符合约束类型的值，必须包含必须的属性：  
+
+  ```TypeScript
+  loggingIdentity({length: 10, value: 3});
+  ```   
+
++ **6. Partial**  
+  `Partial<T>` 的作用就是将某个类型里的属性全部变为可选项 `?` 。  
+  **定义：**  
+  ```TypeScript
+  type Partial<T> = {
+    [P in keyof T]?: T[P];
+  }
+  ```  
+
+  首先，通过 `keyof T` 拿到 `T` 的所有属性名，然后使用 `in` 进行遍历，将值赋给 `p`，最后通过 `T[P]` 去的相应的属性值。中间的 `?` 号，用于将所有属性变为可选。  
+
+  ```TypeScript
+  interface Todo {
+    title: string;
+    description: string;
+  }
+
+  function updateTodo(todo: Todo, fieldsToUpdate: Partial<Todo>) {
+    return { ...todo, ...fieldsToUpdate };
+  }
+
+  const todo1 = {
+    title: "Title 1",
+    description: "Description 1",
+  };
+
+  const todo2 = updateTodo(todo1, {
+    title: "Title 2",
+    description: "Description",
+  });
+  ```  
+
+  在上面的 `updateTodo` 方法中，我们利用了 `Partial<T>` 工具类型，定义 `fieldsToUpdate` 的类型为 `Partial<Todo>`，即：  
+
+  ```TypeScript
+  {
+    title?: string | undefined;
+    description?: string | undefined;
+  }
+  ```
+
+## 十三、TypeScript 装饰器  
+
+### 定义  
+
++ 它是一个表达式
++ 该表达式被执行后，返回一个函数
++ 函数的入参分别是 `target` 、 `name` 和 `descriptor`
++ 执行该函数后，可能返回 descriptor 对象，用于配置 target 对象
+
+### 分类  
+
++ 类装饰器 ( Class decorators )
++ 属性装饰器 ( Property decorators )
++ 方法装饰器 ( Method decorators )
++ 参数装饰器 ( Parameter decorators )
+
+若要启动实验性的装饰器特性，必须在命令行或 `tsconfig.json` 里启用 `experimentalDecorators` 编辑器选项：  
+
+命令行:  
+```TypeScript
+tsc --target ES5 --experimentalDecorators
+```  
+
+tsconfig.json:  
+```TypeScript
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "experimentalDecorators": true,
+  }
+}
+```  
+
+### 类装饰器  
+
+类装饰器声明：  
+```TypeScript
+declare type ClassDecorator = <TFunction extends Function>(
+  target: TFunction
+) => TFunction | void;
+```  
+类装饰器接收一个参数：
++ target: TFunction - 被装饰的类
+
+类装饰器的使用：  
+```TypeScript
+function Greeter(target: Funtion): void {
+  target.prototype.greet = function (): void {
+    console.log("Hello world!");
+  };
+}
+
+@Greeter
+class Greeting {
+  constructor() {
+    //  内部实现
+  }
+}
+
+let myGreeting = new Greeting();
+(myGreeting as any).greet();  // output: 'Hello world!'
+
+// ------------------------------------------------------------
+
+function newGreeter(greeting: string) {
+  return function (target: Function) {
+    target.prototype.greet = function (): void {
+      console.log(greeting);
+    };
+  };
+}
+
+@newGreeter("Hello!")
+class newGreeting {
+  constructor () {
+    // 内部实现
+  }
+}
+
+let myNewGreeting = new newGreeting();
+(myGreeting as any).greet();  // output: 'Hello!'
+```  
+上面的例子中，定义了 `Greeter` 和 `newGreeter` 类装饰器，同时我们使用了 `@Greeter` 和 `@newGreeter` 语法糖，来使用装饰器。  
+
+### 属性装饰器  
+
+属性装饰器声明：  
+```TypeScript
+declare type PropertyDecorator = (target: Object, propertyKey: string | symbol) => void;
+```
+
+属性装饰器接收两个参数：
++ target: Object - 被装饰的类
++ propertyKey: string | symbol - 被装饰类的属性名
+
+属性装饰器的使用：  
+```TypeScript
+function logProperty(target: any, key: string) {
+  delete target[key];
+
+  const backingField = "_" + key;
+
+  Object.defineProperty(target, backingField, {
+    writable: true,
+    enumerable: true,
+    configurable: true,
+  });
+
+  // property getter
+  const getter = function (this: any) {
+    const currVal = this[backingField];
+    console.log(`Get: ${key} => ${currVal}`);
+    return currVal;
+  };
+
+  // property setter
+  const setter = function (this: any, newVal: any) {
+    console.log(`Set: ${key} => ${newVal}`);
+    this[backingField] = newVal;
+  };
+
+  // Create new property with getter and setter
+  Object.defineProperty(target, key, {
+    get: getter,
+    set: setter,
+    enumerable: true,
+    configurable: true,
+  });
+}
+
+class Person {
+  @logProperty
+  public name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+}
+
+const p1 = new Person('aa');
+p1.name = 'AA';
+```  
+
+以上定义了一个 `logProperty` 函数，来跟踪用户对属性的操作，当代码成功运行后，在控制台会输出以下结果：  
+
+```TypeScript
+Set: name => aa
+Set: name => AA
+```  
+
+### 方法装饰器  
+
+方法装饰器声明：  
+```TypeScript
+declare type MethodDecorator = <T>(target: Object, propertyKey: string | symbol, descriptor: TypePropertyDescript<T>) => TypedPropertyDescriptor<T> | void;
+```  
+
+方法装饰器接收三个参数： 
++ target: Object - 被装饰的类
++ propertyKey: string | symbol - 方法名
++ descriptor: TypePropertyDescript - 属性描述符
+
+方法装饰器的使用：  
+
+```TypeScript
+function log(target: Object, propertyKey: string, descriptor: PorpertyDescriptor) {
+  let originalMethod = descriptor.value;
+  descriptor.value = function (...args: any[]) {
+    console.log("wrapped function: before invoking " + propertyKey);
+    let result = originalMethod.apply(this, args);
+    console.log("wrapped function: after invoking " + propertyKey);
+    return result;
+  };
+}
+
+class Task {
+  @log
+  runTask(arg: any): any {
+    console.log("runTask invoked, args: " + arg);
+    return "finished";
+  }
+}
+
+let task = new Task();
+let result = task.runTask("Hello");
+console.log("result: " + result);
+
+// wrapped function: before invoking runTask
+// runTask invoked, args: Hello
+// wrapped function: after invoking runTask
+// result: finished
+```  
+
+### 参数装饰器  
+
+参数装饰器的声明：  
+```TypeScript
+declare type ParameterDecorator = (target: Object, propertyKey: string | symbol, parameterIndex: number) => void
+```  
+
+参数装饰器接收三个参数：  
++ target: Object - 被装饰的类
++ propertyKey: string | symbol - 方法名
++ paramerterIndex: number - 方法中参数的索引值
+
+```TypeScript
+function Log(target: Function, key: string, parameterIndex: number) {
+  let functionLogged = key || target.prototype.constructor.name;
+  console.log(`The parameter in position ${parameterIndex} at ${functionLogged} has been decorated`);
+}
+
+class Greeter {
+  greeting: string;
+  constructor(@Log phrase: string) {
+    this.greeting = phrase;
+  }
+}
+
+// The parameter in position 0 at Greeter has been decorated
+```  
+
+## 十四、TypeScript 4.0 新特性  
+
+### 构造函数的类属性推断  
+
+当 `noImplicitAny` 配置属性被启用后，TypeScript 4.0 就可以使用控制流分析来确认类中的属性类型：  
+
+```TypeScript
+class Person {
+  // 在4.0版本之下的，编译器会提示错误信息： Member 'fullName' implicitly has an 'any' type.(7008)
+  // 在使用过程中，如果无法保证对成员属性都进行赋值，该属性可能会被认为undefined
+  fullName;   // (property) Person.fullName: string                 在4.0版本之下的，编译器会提示错误信息： Error
+  firstName;  // (property) Person.firstName: string | undefined    在4.0版本之下的，编译器会提示错误信息： Error
+  lastName;   // (property) Person.lastName: string | undefined     在4.0版本之下的，编译器会提示错误信息： Error
+
+  constructor(fullName: string) {
+    this.fullName = fullName;
+    this.firstName = fullName.split(" ")[0];
+    this.lastName = fullName.split(" ")[1];
+  }
+}
+```  
+
+### 标记的元组元素  
+
+使用元组类型来声明剩余参数的类型：  
+
+```TypeScript
+function addPerson(...args: [string, number]): void {
+  console.log(`Person info: name: ${args[0]}, age: ${args[1]}`)
+}
+
+addPerson("aa", 5);   // Person info: name: aa, age: 5
+
+// 另一种方法实现
+
+function addPerson(name: string, age: number) {
+  ......
+}
+```  
+
+对于第一种方式，无法设置第一个参数和第二个参数的名称。对类型检查没有影响，但在元组位置上缺少标签，会使得它们难于使用。为了提高开发者使用元组的体验， TS 4.0 支持为元组类型设置标签：  
+
+```TypeScript
+function addPerson(...args: [name: string, age: number]): void {
+  ......
+}
+
+// 第一种方式的智能提示与这种不同
+// 第一种未使用标签的智能提示: addPerson(args_0: string, args_1: number): void
+// 第二种是使用标签的智能提示: addPerson(name: string, age: number): void
+```  
+
+## 十五、编译上下文  
+
+### tsconfig.json的作用  
+
++ 用于标识 TypeScript 项目的根路径
++ 用于配置 TypeScript 编译器
++ 用于指定编译的文件
+
+### tsconfig.json重要字段  
+
++ files - 设置要编译的文件的名称
++ include - 设置需要进行编译的文件，支持路径模式匹配
++ exclude - 设置无需进行编译的文件，支持路径模式匹配
++ compilerOptions - 设置与编译流程相关的选项
+
+### compilerOptions选项  
+
+```TypeScript
+{
+  "compilerOptions": {
+    // 基本选项
+    "target": "es5",
+    "module": "commonjs",
+    "lib": [],
+    "allowJs": true,
+    "checkJs": true,
+    "jsx": "preserve",
+    "declaration": true,
+    "sourceMap": true,
+    "outFile": "./",
+    "outDir": "./",
+    "rootDir": "./",
+    "removeComments": true,
+    "noEmit": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+
+    // 严格的类型检查选项
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    // 额外的检查
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // 模块解析选项
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {},
+    "rootDirs": [],
+    "typeRoots": [],
+    "types": [],
+    "allowSyntheticDefaultImports": true,
+
+    // Source Map Options
+    "sourceRoot": "./",
+    "mapRoot": "./",
+    "inlineSourceMap": true,
+    "inlineSources": true,
+
+    // 其他选项
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+  }
+}
+```
