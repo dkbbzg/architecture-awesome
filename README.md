@@ -71,6 +71,13 @@
   * [属性装饰器](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#属性装饰器)  
   * [方法装饰器](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#方法装饰器)  
   * [参数装饰器](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#参数装饰器)  
+* [十四、TypeScript 4.0 新特性](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#十四typescript-40-新特性)  
+  * [构造函数的类属性推断](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#构造函数的类属性推断)  
+  * [标记的元组元素](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#标记的元组元素)  
+* [十五、编译上下文](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#十五编译上下文)  
+  * [tsconfig.json的作用](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#tsconfigjson的作用)  
+  * [tsconfig.json重要字段](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#tsconfigjson重要字段)  
+  * [compilerOptions选项](https://github.com/dkbbzg/architecture-awesome/blob/main/TypeScript.md#compilerOptions选项)  
 
 ## [数据结构](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#数据结构)  
 * [一、逻辑结构](https://github.com/dkbbzg/architecture-awesome/blob/main/DataStructure.md#一逻辑结构)  
